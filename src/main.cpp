@@ -20,8 +20,8 @@ struct fuse_operations fuse_oper;
 int launch_fs(int argc, char ** argv);
 
 int main(int argc, char ** argv){
-	
-	launch_fs(argc, argv);
+	system ("python py/Dropbox.py");	
+//	launch_fs(argc, argv);
 	return 0;
 }
 
