@@ -4,6 +4,10 @@
 #include <cstdlib>
 #include <cstdio>
 #include <fuse.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <pwd.h>
 
 #include "Crypto.h"
 #include "FILE_IO.h"
@@ -16,13 +20,52 @@
 #include "Mega.h"
 #include "OneDrive.h"
 
+
+
+#define USER_FOLDER "/.rlcs"
+#define CONFIG_FILE "/config"
+#define MANIFEST_FILE "/manifest"
+
 struct fuse_operations fuse_oper;
+void check_user_dir(const char *user_folder_path,
+		const char *config_file, const char *manifest_file);
 int launch_fs(int argc, char ** argv);
 
 int main(int argc, char ** argv){
-	system ("python py/Dropbox.py");	
+	char *homedir = getenv("HOME");
+	char user_folder_path[256] = "";
+	char config_file[256] = "";
+	char manifest_file[256] = "";
+	strcat(user_folder_path, homedir);
+	strcat(user_folder_path, USER_FOLDER);
+	
+	strcat(config_file, user_folder_path);
+	strcat(config_file, CONFIG_FILE);
+
+	strcat(manifest_file, user_folder_path);
+	strcat(manifest_file, MANIFEST_FILE);
+
+
+	check_user_dir(user_folder_path, config_file, manifest_file);
+//	system ("python py/Dropbox.py");	
 //	launch_fs(argc, argv);
 	return 0;
+}
+
+void check_user_dir(const char *user_folder_path,
+		const char *config_file, const char *manifest_file){
+	struct stat st = {0};
+	if (stat(user_folder_path, &st) == -1) {
+		mkdir(user_folder_path, 0700);
+	}
+	if (stat(config_file , &st) == -1){
+		FILE *fp = fopen(config_file, "ab+");
+		fclose(fp);
+	}
+	if (stat(manifest_file, &st) == -1){	
+		FILE *fp = fopen(manifest_file, "ab+");
+		fclose(fp);
+	}
 }
 
 int launch_fs(int argc, char ** argv){
