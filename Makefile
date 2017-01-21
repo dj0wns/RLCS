@@ -1,7 +1,6 @@
 COMPILER=g++
-ARGS=-Wall -O3  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 `pkg-config fuse --cflags` `libgcrypt-config --cflags`
-LINKARGS=-Wall -O3 -lcurl `pkg-config fuse --libs` `libgcrypt-config --libs`
-
+ARGS=-Wall -O3  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 `pkg-config fuse --cflags`
+LINKARGS=-Wall -O3 -lcurl `pkg-config fuse --libs` 
 OUTFILE=bin/rlcs
 SRCDIR=src
 OBJDIR=obj
