@@ -236,7 +236,7 @@ int FUSE_Definitions::Fsyncdir(const char *path, int datasync, struct fuse_file_
 	return 0;
 }
 
-int FUSE_Definitions::Init(struct fuse_conn_info *conn) {
+void* FUSE_Definitions::Init(struct fuse_conn_info *conn) {
 	return 0;
 }
 

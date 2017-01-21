@@ -4,6 +4,7 @@
 
 class Cloud_Storage_Base_Class{
 
+public:
 	virtual int Download(FILE &out_file);
 	virtual int Upload(FILE &in_file);
 	

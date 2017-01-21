@@ -91,7 +91,7 @@ int FUSE_Bindings_releasedir(const char *path, struct fuse_file_info *fileInfo) 
 int FUSE_Bindings_fsyncdir(const char *path, int datasync, struct fuse_file_info *fileInfo) {
 	return FUSE_Definitions::Instance()->Fsyncdir(path, datasync, fileInfo);
 }
-int FUSE_Bindings_init(struct fuse_conn_info *conn) {
+void* FUSE_Bindings_init(struct fuse_conn_info *conn) {
 	return FUSE_Definitions::Instance()->Init(conn);
 }
 

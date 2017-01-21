@@ -49,7 +49,7 @@ int FUSE_Bindings_opendir(const char *path, struct fuse_file_info *fileInfo);
 int FUSE_Bindings_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fileInfo);
 int FUSE_Bindings_releasedir(const char *path, struct fuse_file_info *fileInfo);
 int FUSE_Bindings_fsyncdir(const char *path, int datasync, struct fuse_file_info *fileInfo);
-int FUSE_Bindings_init(struct fuse_conn_info *conn);
+void* FUSE_Bindings_init(struct fuse_conn_info *conn);
 
 #ifdef __cplusplus
 }
