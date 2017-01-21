@@ -1,3 +1,7 @@
+#include <vector>
+#include <cstdio>
+#include <string>
+
 #include "Crypto.h"
 #include "FILE_IO.h"
 #include "FUSE_Bindings.h"
