@@ -8,6 +8,11 @@ Dropbox::Dropbox()
 	Dropbox::Service_Name = "Dropbox";
 }
 
+int Dropbox::Config()
+{
+	return 0;
+}
+
 int Dropbox::Download(FILE &out_file)
 {
 	return 0;

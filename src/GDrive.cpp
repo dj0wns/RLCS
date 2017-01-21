@@ -8,6 +8,11 @@ GDrive::GDrive()
 	GDrive::Service_Name = "GDrive";
 }
 
+int GDrive::Config()
+{
+	return 0;
+}
+
 int GDrive::Download(FILE &out_file)
 {
 	return 0;

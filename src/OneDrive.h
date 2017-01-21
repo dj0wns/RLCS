@@ -3,11 +3,13 @@
 
 #include "Cloud_Storage_Base_Class.h"
 
-class OneDrive : Cloud_Storage_Base_Class{
-
-	OneDrive();
+class OneDrive : public Cloud_Storage_Base_Class{
 
 public:
+	OneDrive();
+
+	int Config();
+	
 	int Download(FILE &out_file);
 	int Upload(FILE &in_file);
 	

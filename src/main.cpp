@@ -29,6 +29,7 @@
 struct fuse_operations fuse_oper;
 void check_user_dir(const char *user_folder_path,
 		const char *config_file, const char *manifest_file);
+void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_drives);
 int launch_fs(int argc, char ** argv);
 
 int main(int argc, char ** argv){
@@ -36,6 +37,10 @@ int main(int argc, char ** argv){
 	char user_folder_path[256] = "";
 	char config_file[256] = "";
 	char manifest_file[256] = "";
+	std::vector<Cloud_Storage_Base_Class*> cloud_drives;
+	cloud_drives.push_back(new Dropbox());
+	//cloud_drives.push_back(GDrive());
+
 	strcat(user_folder_path, homedir);
 	strcat(user_folder_path, USER_FOLDER);
 	
@@ -47,6 +52,8 @@ int main(int argc, char ** argv){
 
 
 	check_user_dir(user_folder_path, config_file, manifest_file);
+
+	config(config_file, cloud_drives);
 //	system ("python py/Dropbox.py");	
 //	launch_fs(argc, argv);
 	return 0;
@@ -65,6 +72,14 @@ void check_user_dir(const char *user_folder_path,
 	if (stat(manifest_file, &st) == -1){	
 		FILE *fp = fopen(manifest_file, "ab+");
 		fclose(fp);
+	}
+}
+
+void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_drives)
+{
+	for(auto cloud_drive : cloud_drives)
+	{
+		// TODO
 	}
 }
 

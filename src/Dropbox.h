@@ -3,11 +3,13 @@
 
 #include "Cloud_Storage_Base_Class.h"
 
-class Dropbox : Cloud_Storage_Base_Class{
-
-	Dropbox();
+class Dropbox : public Cloud_Storage_Base_Class{
 
 public:
+	Dropbox();
+
+	int Config();
+
 	int Download(FILE &out_file);
 	int Upload(FILE &in_file);
 	

@@ -8,6 +8,11 @@ Mega::Mega()
 	Mega::Service_Name = "Mega";
 }
 
+int Mega::Config()
+{
+	return 0;
+}
+
 int Mega::Download(FILE &out_file)
 {
 	return 0;

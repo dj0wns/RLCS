@@ -3,11 +3,13 @@
 
 #include "Cloud_Storage_Base_Class.h"
 
-class Mega : Cloud_Storage_Base_Class{
-
-	Mega();
+class Mega : public Cloud_Storage_Base_Class{
 
 public:
+	Mega();
+
+	int Config();
+	
 	int Download(FILE &out_file);
 	int Upload(FILE &in_file);
 	
