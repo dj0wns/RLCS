@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <pwd.h>
+#include <fstream>
 
 #include "Crypto.h"
 #include "FILE_IO.h"
@@ -25,18 +26,20 @@
 #define USER_FOLDER "/.rlcs"
 #define CONFIG_FILE "/config"
 #define MANIFEST_FILE "/manifest"
+#define DIR_FILE "/dir"
 
 struct fuse_operations fuse_oper;
-void check_user_dir(const char *user_folder_path,
-		const char *config_file, const char *manifest_file);
+void check_user_dir(const char *user_folder_path, const char *config_file, 
+		const char *manifest_file, const char *dir_file);
 void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_drives);
-int launch_fs(int argc, char ** argv);
+int launch_fs(int argc, char ** argv, const char *manifest, const char *dir);
 
 int main(int argc, char ** argv){
 	char *homedir = getenv("HOME");
 	char user_folder_path[256] = "";
 	char config_file[256] = "";
 	char manifest_file[256] = "";
+	char dir_file[256] = "";
 	std::vector<Cloud_Storage_Base_Class*> cloud_drives;
 	cloud_drives.push_back(new Dropbox());
 	//cloud_drives.push_back(GDrive());
@@ -50,17 +53,19 @@ int main(int argc, char ** argv){
 	strcat(manifest_file, user_folder_path);
 	strcat(manifest_file, MANIFEST_FILE);
 
+	strcat(dir_file, user_folder_path);
+	strcat(dir_file, DIR_FILE);
 
-	check_user_dir(user_folder_path, config_file, manifest_file);
+	check_user_dir(user_folder_path, config_file, manifest_file, dir_file);
 
 	config(config_file, cloud_drives);
 //	system ("python py/Dropbox.py");	
-//	launch_fs(argc, argv);
+//	launch_fs(argc, argv, manifest_file, dir_file);
 	return 0;
 }
 
-void check_user_dir(const char *user_folder_path,
-		const char *config_file, const char *manifest_file){
+void check_user_dir(const char *user_folder_path, const char *config_file, 
+		const char *manifest_file, const char *dir_file ){
 	struct stat st = {0};
 	if (stat(user_folder_path, &st) == -1) {
 		mkdir(user_folder_path, 0700);
@@ -73,6 +78,19 @@ void check_user_dir(const char *user_folder_path,
 		FILE *fp = fopen(manifest_file, "ab+");
 		fclose(fp);
 	}
+	if (stat(dir_file, &st) == -1){	
+		std::string temp;
+		std::ifstream fin (manifest_file, std::ifstream::in);
+		std::ofstream fout (dir_file, std::ofstream::out);
+		while(fin.good()){
+			fin >> temp;
+			fout << temp << std::endl;
+			fin.ignore(256,'\n');
+		}	
+		fin.close();
+		fout.close();
+	
+	}
 }
 
 void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_drives)
@@ -83,8 +101,9 @@ void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_dri
 	}
 }
 
-int launch_fs(int argc, char ** argv){
+int launch_fs(int argc, char ** argv, const char *manifest){
 	int i, fuse_stat;
+	set_manifest(manifest);
 	fuse_oper.getattr = FUSE_Bindings_getattr;
 	fuse_oper.readlink = FUSE_Bindings_readlink;
 	fuse_oper.getdir = NULL;

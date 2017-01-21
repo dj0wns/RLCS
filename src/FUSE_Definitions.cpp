@@ -22,7 +22,7 @@ FUSE_Definitions::~FUSE_Definitions() {
 void FUSE_Definitions::AbsPath(char dest[PATH_MAX], const char *path) {
 	strcpy(dest, _root);
 	strncat(dest, path, PATH_MAX);
-	//printf("translated path: %s to %s\n", path, dest);
+//	printf("translated path: %s to %s\n", path, dest);
 }
 
 void FUSE_Definitions::setRootDir(const char *path) {
@@ -30,11 +30,33 @@ void FUSE_Definitions::setRootDir(const char *path) {
 	_root = path;
 }
 
+void FUSE_Definitions::setManifest(const char *path) {
+	printf("setting manifest path to: %s\n", path);
+	manifest = path;
+}
+
 int FUSE_Definitions::Getattr(const char *path, struct stat *statbuf) {
 	char fullPath[PATH_MAX];
+	if(strcmp(path, "/") == 0){
+		printf("getattr(%s)\n", path);
+		statbuf->st_mode = 16877;
+		statbuf->st_ino = 666420;
+		statbuf->st_dev = 666420;
+		statbuf->st_uid = 1000;
+		statbuf->st_gid = 1000;
+		statbuf->st_atime = 1000;
+		statbuf->st_ctime = 1000;
+		statbuf->st_mtime = 1000;
+		statbuf->st_nlink = 1;
+		statbuf->st_size = 4096;
+		return 0;
+	} else {
+
 	AbsPath(fullPath, path);
-	printf("getattr(%s)\n", fullPath);
-	return RETURN_ERRNO(lstat(fullPath, statbuf));
+	printf("getattr(%s)\n", path);
+	lstat(fullPath, statbuf);
+		return RETURN_ERRNO(lstat(fullPath, statbuf));
+	}
 }
 
 int FUSE_Definitions::Readlink(const char *path, char *link, size_t size) {
@@ -181,16 +203,21 @@ int FUSE_Definitions::Setxattr(const char *path, const char *name, const char *v
 }
 
 int FUSE_Definitions::Getxattr(const char *path, const char *name, char *value, size_t size) {
-	printf("getxattr(path=%s, name=%s, size=%d\n", path, name, (int)size);
-	char fullPath[PATH_MAX];
-	AbsPath(fullPath, path);
-	return RETURN_ERRNO(getxattr(fullPath, name, value, size));
+	if(strcmp(path, "/") == 0){
+		return 0;
+	} else {
+		char fullPath[PATH_MAX];
+		AbsPath(fullPath, path);
+		getxattr(fullPath, name, value, size);
+		printf("getxattr(path=%s, name=%s, size=%d, value=%s\n", path, name, (int)size, value);
+		return RETURN_ERRNO(getxattr(fullPath, name, value, size));
+	}
 }
 
 int FUSE_Definitions::Listxattr(const char *path, char *list, size_t size) {
-	printf("listxattr(path=%s, size=%d)\n", path, (int)size);
 	char fullPath[PATH_MAX];
 	AbsPath(fullPath, path);
+	printf("getxattr(path=%s, size=%d, value=%s\n", path, (int)size);
 	return RETURN_ERRNO(llistxattr(fullPath, list, size));
 }
 
@@ -203,25 +230,34 @@ int FUSE_Definitions::Removexattr(const char *path, const char *name) {
 
 int FUSE_Definitions::Opendir(const char *path, struct fuse_file_info *fileInfo) {
 	printf("opendir(path=%s)\n", path);
-	char fullPath[PATH_MAX];
-	AbsPath(fullPath, path);
-	DIR *dir = opendir(fullPath);
-	fileInfo->fh = (uint64_t)dir;
-	return NULL == dir ? -errno : 0;
+	if(strcmp(path, "/") == 1){
+		return 0;
+	} else {
+		char fullPath[PATH_MAX];
+		AbsPath(fullPath, path);
+		DIR *dir = opendir(fullPath);
+		fileInfo->fh = (uint64_t)dir;
+		return NULL == dir ? -errno : 0;
+	}
 }
 
 int FUSE_Definitions::Readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fileInfo) {
-	printf("readdir(path=%s, offset=%d)\n", path, (int)offset);
-	DIR *dir = (DIR*)fileInfo->fh;
-	struct dirent *de = readdir(dir);
-	if(NULL == de) {
-		return -errno;
+	if(strcmp(path, "/") == 1){
+		return 0;
 	} else {
-		do {
-			if(filler(buf, de->d_name, NULL, 0) != 0) {
-				return -ENOMEM;
-			}
-		} while(NULL != (de = readdir(dir)));
+		printf("readdir(path=%s, offset=%d)\n", path, (int)offset);
+		DIR *dir = (DIR*)fileInfo->fh;
+		struct dirent *de = readdir(dir);
+		if(NULL == de) {
+			return -errno;
+		} else {
+			do {
+//				printf("de %s\n",de->d_name);
+				if(filler(buf, de->d_name, NULL, 0) != 0) {
+					return -ENOMEM;
+				}
+			} while(NULL != (de = readdir(dir)));
+		}
 	}
 	return 0;
 }

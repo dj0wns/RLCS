@@ -18,7 +18,8 @@
 class FUSE_Definitions {
 private: 
 	const char *_root;
-
+	const char *manifest;
+	const char *dir;
 	static FUSE_Definitions *_instance;
 
 	void AbsPath(char dest[PATH_MAX], const char *path);
@@ -30,6 +31,7 @@ public:
 	~FUSE_Definitions();
 
 	void setRootDir(const char *path);
+	void setManifest(const char *path);
 
 	int Getattr(const char *path, struct stat *statbuf);
 	int Readlink(const char *path, char *link, size_t size);
