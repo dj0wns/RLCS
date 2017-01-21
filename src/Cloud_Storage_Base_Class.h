@@ -8,6 +8,14 @@
 class Cloud_Storage_Base_Class{
 
 public:
+
+	std::string OAuth_Key;
+	std::string Service_Name;
+
+	Cloud_Storage_Base_Class(): OAuth_Key(""){};
+
+	virtual int Config()=0;
+
 	virtual int Download(FILE &out_file)=0;
 	virtual int Upload(FILE &in_file)=0;
 	

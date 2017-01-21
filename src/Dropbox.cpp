@@ -3,6 +3,11 @@
 
 #include "Dropbox.h"
 
+Dropbox::Dropbox()
+{
+	Dropbox::Service_Name = "Dropbox";
+}
+
 int Dropbox::Download(FILE &out_file)
 {
 	return 0;

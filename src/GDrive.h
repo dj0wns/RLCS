@@ -5,6 +5,8 @@
 
 class GDrive : Cloud_Storage_Base_Class{
 
+	GDrive();
+
 public:
 	int Download(FILE &out_file);
 	int Upload(FILE &in_file);

@@ -3,6 +3,11 @@
 
 #include "OneDrive.h"
 
+OneDrive::OneDrive()
+{
+	OneDrive::Service_Name = "OneDrive";
+}
+
 int OneDrive::Download(FILE &out_file)
 {
 	return 0;

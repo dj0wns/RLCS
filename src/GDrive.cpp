@@ -3,6 +3,11 @@
 
 #include "GDrive.h"
 
+GDrive::GDrive()
+{
+	GDrive::Service_Name = "GDrive";
+}
+
 int GDrive::Download(FILE &out_file)
 {
 	return 0;

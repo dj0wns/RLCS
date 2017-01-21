@@ -5,6 +5,8 @@
 
 class Mega : Cloud_Storage_Base_Class{
 
+	Mega();
+
 public:
 	int Download(FILE &out_file);
 	int Upload(FILE &in_file);

@@ -3,6 +3,11 @@
 
 #include "Mega.h"
 
+Mega::Mega()
+{
+	Mega::Service_Name = "Mega";
+}
+
 int Mega::Download(FILE &out_file)
 {
 	return 0;

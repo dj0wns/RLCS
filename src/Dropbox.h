@@ -5,6 +5,8 @@
 
 class Dropbox : Cloud_Storage_Base_Class{
 
+	Dropbox();
+
 public:
 	int Download(FILE &out_file);
 	int Upload(FILE &in_file);
