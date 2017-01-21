@@ -1,7 +1,9 @@
 #ifndef DROPBOX_H
 #define DROPBOX_H
 
-class Dropbox{
+#include "Cloud_Storage_Base_Class.h"
+
+class Dropbox : Cloud_Storage_Base_Class{
 
 public:
 	int Download(FILE &out_file);
@@ -15,6 +17,5 @@ public:
 	int Space_Used();
 
 };
-
 
 #endif
