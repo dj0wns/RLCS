@@ -1,3 +1,6 @@
+# RAID-Like Cloud Storage (RLCS)
+### A mountable virtual drive for distributing, encrypting, and retrieving files across multiple cloud storage providers.
+
 Working directory for our project at PennApps XV. 
 
 Team Members: Derek Jones, Waverly Roeger, Andrew Boyan
