@@ -10,8 +10,8 @@ public:
 
 	int Config(char* config_path = NULL);
 
-	int Download(char* config_path, char* to_path, FILE &out_file);
-	int Upload(char* config_path, FILE &in_file);
+	int Download(char* config_path, char* to_path, char* out_file);
+	int Upload(char* config_path, char* in_file);
 	
 	int Remove(char* file_name);
 
