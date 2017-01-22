@@ -14,10 +14,10 @@ public:
 
 	Cloud_Storage_Base_Class(): OAuth_Key(""){};
 
-	virtual int Config(char* path = NULL);
+	virtual int Config(char* config_path = NULL);
 
-	virtual int Download(FILE &out_file);
-	virtual int Upload(FILE &in_file);
+	virtual int Download(char* config_path, char* to_path, FILE &out_file);
+	virtual int Upload(char* config_path, FILE &in_file);
 	
 	virtual int Remove(char* file_name);
 

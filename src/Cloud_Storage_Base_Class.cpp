@@ -1,13 +1,13 @@
 #include "Cloud_Storage_Base_Class.h"
 
-int Cloud_Storage_Base_Class::Config(char* path){
+int Cloud_Storage_Base_Class::Config(char* config_path){
 	return 0;
 }
 
-int Cloud_Storage_Base_Class::Download(FILE &out_file){
+int Cloud_Storage_Base_Class::Download(char* config_path, char* to_path, FILE &out_file){
 	return 0;
 }
-int Cloud_Storage_Base_Class::Upload(FILE &in_file){
+int Cloud_Storage_Base_Class::Upload(char* config_path, FILE &in_file){
 	return 0;
 }
 	

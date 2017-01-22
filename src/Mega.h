@@ -8,10 +8,10 @@ class Mega : public Cloud_Storage_Base_Class{
 public:
 	Mega();
 
-	int Config(char* path = NULL);
+	int Config(char* config_path = NULL);
 	
-	int Download(FILE &out_file);
-	int Upload(FILE &in_file);
+	int Download(char* config_path, char* to_path, FILE &out_file);
+	int Upload(char* config_path, FILE &in_file);
 	
 	int Remove(char* file_name);
 

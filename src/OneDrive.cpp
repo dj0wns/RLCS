@@ -7,15 +7,15 @@ OneDrive::OneDrive(){
 	OneDrive::Service_Name = "OneDrive";
 }
 
-int OneDrive::Config(char* path){
+int OneDrive::Config(char* config_path){
 	return 0;
 }
 
-int OneDrive::Download(FILE &out_file){
+int OneDrive::Download(char* config_path, char* to_path, FILE &out_file){
 	return 0;
 }
 
-int OneDrive::Upload(FILE &in_file){
+int OneDrive::Upload(char* config_path, FILE &in_file){
 	return 0;
 }
 

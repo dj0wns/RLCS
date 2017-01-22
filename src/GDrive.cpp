@@ -7,15 +7,15 @@ GDrive::GDrive(){
 	GDrive::Service_Name = "GDrive";
 }
 
-int GDrive::Config(char* path){
+int GDrive::Config(char* config_path){
 	return system("python2 py/GDriveConfig.py");
 }
 
-int GDrive::Download(FILE &out_file){
+int GDrive::Download(char* config_path, char* to_path, FILE &out_file){
 	return 0;
 }
 
-int GDrive::Upload(FILE &in_file){
+int GDrive::Upload(char* config_path, FILE &in_file){
 	return 0;
 }
 

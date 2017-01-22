@@ -7,18 +7,22 @@ Dropbox::Dropbox(){
 	Dropbox::Service_Name = "Dropbox";
 }
 
-int Dropbox::Config(char* path){
+int Dropbox::Config(char* config_path){
 	char buffer[256];
-	sprintf(buffer, "python2 py/DropboxConfig.py %s", path);
+	sprintf(buffer, "python2 py/DropboxConfig.py %s", config_path);
 	return system(buffer);
 }
 
-int Dropbox::Download(FILE &out_file){
-	return 0;
+int Dropbox::Download(char* config_path, char* to_path, FILE &out_file){
+	char buffer[256];
+	sprintf(buffer, "python2 py/DropboxDownload.py %s %s out_file", config_path, to_path);
+	return system(buffer);
 }
 
-int Dropbox::Upload(FILE &in_file){
-	return 0;
+int Dropbox::Upload(char* config_path, FILE &in_file){
+	char buffer[256];
+	sprintf(buffer, "python2 py/DropboxUpload.py %s in_file", config_path);
+	return system(buffer);
 }
 
 int Dropbox::Remove(char* file_name){
