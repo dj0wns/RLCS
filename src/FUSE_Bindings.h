@@ -20,7 +20,11 @@ extern "C" {
 #endif
 
 void set_rootdir(const char *path);
+<<<<<<< Updated upstream
 void set_manifest(const char *path, const char *temp);
+=======
+void set_manifest(const char *path, const char *dir_path);
+>>>>>>> Stashed changes
 
 int FUSE_Bindings_getattr(const char *path, struct stat *statbuf);
 int FUSE_Bindings_readlink(const char *path, char *link, size_t size);

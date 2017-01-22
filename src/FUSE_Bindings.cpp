@@ -5,8 +5,13 @@ void set_rootdir(const char *path) {
 	FUSE_Definitions::Instance()->setRootDir(path);
 }
 
+<<<<<<< Updated upstream
 void set_manifest(const char *path, const char *temp) {
 	FUSE_Definitions::Instance()->setManifest(path, temp);
+=======
+void set_manifest(const char *path, const char *dir_path) {
+	FUSE_Definitions::Instance()->setManifest(path, dir_path);
+>>>>>>> Stashed changes
 }
 
 int FUSE_Bindings_getattr(const char *path, struct stat *statbuf) {

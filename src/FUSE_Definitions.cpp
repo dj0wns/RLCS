@@ -30,16 +30,17 @@ void FUSE_Definitions::setRootDir(const char *path) {
 	_root = path;
 }
 
-void FUSE_Definitions::setManifest(const char *path) {
+void FUSE_Definitions::setManifest(const char *path, const char *dir_path) {
 	printf("setting manifest path to: %s\n", path);
 	manifest = path;
+	dir = dir_path;
 }
 
 int FUSE_Definitions::Getattr(const char *path, struct stat *statbuf) {
 	char fullPath[PATH_MAX];
 	if(strcmp(path, "/") == 0){
 		printf("getattr(%s)\n", path);
-		statbuf->st_mode = 16877;
+		statbuf->st_mode = S_IFDIR+6 ;
 		statbuf->st_ino = 666420;
 		statbuf->st_dev = 666420;
 		statbuf->st_uid = 1000;
@@ -51,12 +52,29 @@ int FUSE_Definitions::Getattr(const char *path, struct stat *statbuf) {
 		statbuf->st_size = 4096;
 		return 0;
 	} else {
-
-	AbsPath(fullPath, path);
-	printf("getattr(%s)\n", path);
-	lstat(fullPath, statbuf);
-		return RETURN_ERRNO(lstat(fullPath, statbuf));
+		printf("getdatattr(%s)\n", path);
+		std::string temp;
+		std::ifstream fin (manifest, std::ifstream::in);
+		fin >> temp;
+		while(fin.good()){
+			fin.ignore(256,'\n');
+			if(strcmp(path,temp.c_str())){
+				statbuf->st_mode =  S_IFREG +6;
+				statbuf->st_ino = 666420;
+				statbuf->st_dev = 666420;
+				statbuf->st_uid = 1000;
+				statbuf->st_gid = 1000;
+				statbuf->st_atime = 1000;
+				statbuf->st_ctime = 1000;
+				statbuf->st_mtime = 1000;
+				statbuf->st_nlink = 1;
+				statbuf->st_size = 4096;
+			}
+			fin >> temp;
+		} 
+		return 0;
 	}
+	return -1;
 }
 
 int FUSE_Definitions::Readlink(const char *path, char *link, size_t size) {
@@ -120,24 +138,23 @@ int FUSE_Definitions::Link(const char *path, const char *newpath) {
 }
 
 int FUSE_Definitions::Chmod(const char *path, mode_t mode) {
+	//do nothing we dgaf about this rn
 	printf("chmod(path=%s, mode=%d)\n", path, mode);
-	char fullPath[PATH_MAX];
-	AbsPath(fullPath, path);
-	return RETURN_ERRNO(chmod(fullPath, mode));
+	return 0;
 }
 
 int FUSE_Definitions::Chown(const char *path, uid_t uid, gid_t gid) {
+	//do nothing we dgaf about this rn
 	printf("chown(path=%s, uid=%d, gid=%d)\n", path, (int)uid, (int)gid);
-	char fullPath[PATH_MAX];
-	AbsPath(fullPath, path);
-	return RETURN_ERRNO(chown(fullPath, uid, gid));
+	return 0;
 }
 
 int FUSE_Definitions::Truncate(const char *path, off_t newSize) {
 	printf("truncate(path=%s, newSize=%d\n", path, (int)newSize);
-	char fullPath[PATH_MAX];
-	AbsPath(fullPath, path);
-	return RETURN_ERRNO(truncate(fullPath, newSize));
+	char full_path[256] = "/home/dj0wns/.rlcs/temp";
+	strcat(full_path, path);
+
+	return RETURN_ERRNO(truncate(full_path, newSize));
 }
 
 int FUSE_Definitions::Utime(const char *path, struct utimbuf *ubuf) {
@@ -162,7 +179,15 @@ int FUSE_Definitions::Read(const char *path, char *buf, size_t size, off_t offse
 
 int FUSE_Definitions::Write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fileInfo) {
 	printf("write(path=%s, size=%d, offset=%d)\n", path, (int)size, (int)offset);
-	return RETURN_ERRNO(pwrite(fileInfo->fh, buf, size, offset));
+	char full_path[256] = "/home/dj0wns/.rlcs/temp";
+	int ret;
+	strcat(full_path, path);
+
+	FILE *fs = fopen(full_path, "wb");
+	fseek(fs, offset, SEEK_SET);
+	ret = fwrite(buf, sizeof(char), size, fs);
+	fclose(fs);
+	return ret;
 }
 
 int FUSE_Definitions::Statfs(const char *path, struct statvfs *statInfo) {
@@ -204,6 +229,7 @@ int FUSE_Definitions::Setxattr(const char *path, const char *name, const char *v
 
 int FUSE_Definitions::Getxattr(const char *path, const char *name, char *value, size_t size) {
 	if(strcmp(path, "/") == 0){
+		printf("getxattr(path=%s, name=%s, size=%d, value=%s\n", path, name, (int)size, value);
 		return 0;
 	} else {
 		char fullPath[PATH_MAX];
@@ -242,22 +268,28 @@ int FUSE_Definitions::Opendir(const char *path, struct fuse_file_info *fileInfo)
 }
 
 int FUSE_Definitions::Readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fileInfo) {
-	if(strcmp(path, "/") == 1){
-		return 0;
-	} else {
-		printf("readdir(path=%s, offset=%d)\n", path, (int)offset);
+	std::string temp;
+	if(strcmp(path, "/") == 0){
+		printf("%s\n",fileInfo->fh);
 		DIR *dir = (DIR*)fileInfo->fh;
 		struct dirent *de = readdir(dir);
 		if(NULL == de) {
 			return -errno;
 		} else {
-			do {
-//				printf("de %s\n",de->d_name);
-				if(filler(buf, de->d_name, NULL, 0) != 0) {
+			std::ifstream fin (manifest, std::ifstream::in);
+			fin >> temp;
+			while(fin.good()){
+				fin.ignore(256,'\n');
+				if(filler(buf, temp.c_str(), NULL, 0) != 0) {
 					return -ENOMEM;
 				}
-			} while(NULL != (de = readdir(dir)));
+				fin >> temp;
+			} 
 		}
+		return 0;
+	} else {
+		printf("readdir(path=%s, offset=%d) THIS SHOULDNT HAPPEN!\n", path, (int)offset);
+		return 0;
 	}
 	return 0;
 }

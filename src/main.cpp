@@ -61,7 +61,11 @@ int main(int argc, char ** argv){
 	check_user_dir(user_folder_path, config_file, manifest_file, dir_file);
 
 	config(config_file, cloud_drives);
+<<<<<<< Updated upstream
 //	launch_fs(argc, argv, manifest_file, dir_file);
+=======
+	launch_fs(argc, argv, manifest_file, dir_file);
+>>>>>>> Stashed changes
 	return 0;
 }
 
@@ -103,9 +107,15 @@ void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_dri
 	}
 }
 
+<<<<<<< Updated upstream
 int launch_fs(int argc, char ** argv, const char *manifest, const char *temp){
 	int i, fuse_stat;
 	set_manifest(manifest, temp);
+=======
+int launch_fs(int argc, char ** argv, const char *manifest, const char *dir){
+	int i, fuse_stat;
+	set_manifest(manifest, dir);
+>>>>>>> Stashed changes
 	fuse_oper.getattr = FUSE_Bindings_getattr;
 	fuse_oper.readlink = FUSE_Bindings_readlink;
 	fuse_oper.getdir = NULL;

@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/xattr.h>
+#include <fstream>
 
 class FUSE_Definitions {
 private: 
@@ -31,7 +32,7 @@ public:
 	~FUSE_Definitions();
 
 	void setRootDir(const char *path);
-	void setManifest(const char *path);
+	void setManifest(const char *path, const char *dir_path);
 
 	int Getattr(const char *path, struct stat *statbuf);
 	int Readlink(const char *path, char *link, size_t size);
