@@ -1,3 +1,3 @@
 #!/bin/bash
 
-bin/rlcs src/ mount/ -f -s
+bin/rlcs src/ mount/ -f 

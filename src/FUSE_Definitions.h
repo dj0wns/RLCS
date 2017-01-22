@@ -16,11 +16,15 @@
 #include <sys/xattr.h>
 #include <fstream>
 
+#include "FILE_IO.h"
+#include "Cloud_Storage_Base_Class.h"
+
 class FUSE_Definitions {
 private: 
 	const char *_root;
 	const char *manifest;
 	const char *temp_path;
+	std::vector<Cloud_Storage_Base_Class*> *cloud_drives;
 	static FUSE_Definitions *_instance;
 
 	void AbsPath(char dest[PATH_MAX], const char *path);
@@ -32,7 +36,7 @@ public:
 	~FUSE_Definitions();
 
 	void setRootDir(const char *path);
-	void setManifest(const char *path, const char *temp);
+	void setManifest(const char *path, const char *temp, std::vector<Cloud_Storage_Base_Class*> &cloud_drives);
 
 	int Getattr(const char *path, struct stat *statbuf);
 	int Readlink(const char *path, char *link, size_t size);

@@ -32,7 +32,8 @@ struct fuse_operations fuse_oper;
 void check_user_dir(const char *user_folder_path, const char *config_file, 
 		const char *manifest_file, const char *temp_dir);
 void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_drives);
-int launch_fs(int argc, char ** argv, const char *manifest, const char *temp);
+int launch_fs(int argc, char ** argv, const char *manifest, const char *temp,
+		std::vector<Cloud_Storage_Base_Class*> &cloud_drives);
 
 int main(int argc, char ** argv){
 	char *homedir = getenv("HOME");
@@ -43,8 +44,8 @@ int main(int argc, char ** argv){
 	std::vector<Cloud_Storage_Base_Class*> cloud_drives;
 	cloud_drives.push_back(new Dropbox());
 	cloud_drives.push_back(new GDrive());
-	cloud_drives.push_back(new Mega());
-	cloud_drives.push_back(new OneDrive());
+//	cloud_drives.push_back(new Mega());
+//	cloud_drives.push_back(new OneDrive());
 
 	strcat(user_folder_path, homedir);
 	strcat(user_folder_path, USER_FOLDER);
@@ -59,9 +60,10 @@ int main(int argc, char ** argv){
 	strcat(temp_dir, TEMP_DIR);
 
 	check_user_dir(user_folder_path, config_file, manifest_file, temp_dir);
+	
 
 	config(config_file, cloud_drives);
-//	launch_fs(argc, argv, manifest_file, temp_dir);
+	launch_fs(argc, argv, manifest_file, temp_dir, cloud_drives);
 	return 0;
 }
 
@@ -90,9 +92,10 @@ void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_dri
 	}
 }
 
-int launch_fs(int argc, char ** argv, const char *manifest, const char *temp){
+int launch_fs(int argc, char ** argv, const char *manifest, const char *temp,
+		std::vector<Cloud_Storage_Base_Class*> &cloud_drives){
 	int i, fuse_stat;
-	set_manifest(manifest, temp);
+	set_manifest(manifest, temp, cloud_drives);
 	fuse_oper.getattr = FUSE_Bindings_getattr;
 	fuse_oper.readlink = FUSE_Bindings_readlink;
 	fuse_oper.getdir = NULL;

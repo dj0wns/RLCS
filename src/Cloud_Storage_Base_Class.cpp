@@ -4,10 +4,10 @@ int Cloud_Storage_Base_Class::Config(char* config_path){
 	return 0;
 }
 
-int Cloud_Storage_Base_Class::Download(char* config_path, char* to_path, char* out_file){
+int Cloud_Storage_Base_Class::Download(const char* config_path, const char* to_path, const char* out_file){
 	return 0;
 }
-int Cloud_Storage_Base_Class::Upload(char* config_path, char* in_file){
+int Cloud_Storage_Base_Class::Upload(const char* config_path, const char* in_file){
 	return 0;
 }
 	

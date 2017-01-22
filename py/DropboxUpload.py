@@ -1,5 +1,6 @@
 # Include the Dropbox SDK
 import dropbox
+import os.path
 import sys
 
 # Get your app key and secret from the Dropbox developer website
@@ -36,5 +37,5 @@ if len(sys.argv) >= 3:
 			key_found = True
 	# argv[2] is file path to upload
 	with open(sys.argv[2], 'rb') as in_file:
-		response = client.put_file(sys.argv[2], in_file)
+		response = client.put_file(os.path.basename(sys.argv[2]), in_file)
 		print "uploaded:", response

@@ -14,13 +14,16 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/xattr.h>
+#include <vector>
+
+#include "Cloud_Storage_Base_Class.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 void set_rootdir(const char *path);
-void set_manifest(const char *path, const char *temp);
+void set_manifest(const char *path, const char *temp, std::vector<Cloud_Storage_Base_Class*> &cloud_drives);
 
 int FUSE_Bindings_getattr(const char *path, struct stat *statbuf);
 int FUSE_Bindings_readlink(const char *path, char *link, size_t size);

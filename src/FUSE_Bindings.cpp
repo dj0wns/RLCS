@@ -5,8 +5,8 @@ void set_rootdir(const char *path) {
 	FUSE_Definitions::Instance()->setRootDir(path);
 }
 
-void set_manifest(const char *path, const char *temp) {
-	FUSE_Definitions::Instance()->setManifest(path, temp);
+void set_manifest(const char *path, const char *temp, std::vector<Cloud_Storage_Base_Class*> &cloud_drives) {
+	FUSE_Definitions::Instance()->setManifest(path, temp, cloud_drives);
 }
 
 int FUSE_Bindings_getattr(const char *path, struct stat *statbuf) {

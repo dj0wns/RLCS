@@ -1,6 +1,6 @@
 COMPILER=g++
-ARGS=-Wall -O3  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 `pkg-config fuse --cflags` -std=c++11
-LINKARGS=-Wall -O3 -lcurl `pkg-config fuse --libs` -std=c++11
+ARGS=-Wall -O3 -pthread  -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 `pkg-config fuse --cflags` -std=c++11
+LINKARGS=-Wall -O3 -pthread -lcurl `pkg-config fuse --libs` -std=c++11
 OUTFILE=bin/rlcs
 SRCDIR=src
 OBJDIR=obj

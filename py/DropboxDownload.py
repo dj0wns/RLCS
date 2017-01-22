@@ -36,6 +36,6 @@ if len(sys.argv) >= 4:
 			key_found = True
 	# argv[2] is where to download to
 	# argv[3] is file path to download
-	with open(sys.argv[2] + sys.argv[3], 'wb+') as temp:
+	with open(sys.argv[2] + "/" +  sys.argv[3], 'wb+') as temp:
 		with client.get_file(sys.argv[3]) as out_file:
 			temp.write(out_file.read())

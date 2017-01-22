@@ -2,4 +2,4 @@ client_config_file: client_secrets.json
 
 save_credentials: True
 save_credentials_backend: file
-save_credentials_file: /home/weiverlyroe/.rlcs/config
+save_credentials_file: /home/dj0wns/.rlcs/Gconfig
