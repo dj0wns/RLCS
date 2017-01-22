@@ -16,8 +16,8 @@ public:
 
 	virtual int Config(char* config_path = NULL);
 
-	virtual int Download(char* config_path, char* to_path, FILE &out_file);
-	virtual int Upload(char* config_path, FILE &in_file);
+	virtual int Download(char* config_path, char* to_path, char* out_file);
+	virtual int Upload(char* config_path, char* in_file);
 	
 	virtual int Remove(char* file_name);
 

@@ -11,11 +11,11 @@ int OneDrive::Config(char* config_path){
 	return 0;
 }
 
-int OneDrive::Download(char* config_path, char* to_path, FILE &out_file){
+int OneDrive::Download(char* config_path, char* to_path, char* out_file){
 	return 0;
 }
 
-int OneDrive::Upload(char* config_path, FILE &in_file){
+int OneDrive::Upload(char* config_path, char* in_file){
 	return 0;
 }
 

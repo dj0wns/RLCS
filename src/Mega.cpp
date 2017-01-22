@@ -11,11 +11,11 @@ int Mega::Config(char* config_path){
 	return 0;
 }
 
-int Mega::Download(char* config_path, char* to_path, FILE &out_file){
+int Mega::Download(char* config_path, char* to_path, char* out_file){
 	return 0;
 }
 
-int Mega::Upload(char* config_path, FILE &in_file){
+int Mega::Upload(char* config_path, char* in_file){
 	return 0;
 }
 

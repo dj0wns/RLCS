@@ -13,13 +13,13 @@ int Dropbox::Config(char* config_path){
 	return system(buffer);
 }
 
-int Dropbox::Download(char* config_path, char* to_path, FILE &out_file){
+int Dropbox::Download(char* config_path, char* to_path, char* out_file){
 	char buffer[256];
 	sprintf(buffer, "python2 py/DropboxDownload.py %s %s out_file", config_path, to_path);
 	return system(buffer);
 }
 
-int Dropbox::Upload(char* config_path, FILE &in_file){
+int Dropbox::Upload(char* config_path, char* in_file){
 	char buffer[256];
 	sprintf(buffer, "python2 py/DropboxUpload.py %s in_file", config_path);
 	return system(buffer);
