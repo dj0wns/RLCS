@@ -8,6 +8,7 @@
 #include <cstring>
 #include <thread>
 
+#include "Globals.h"
 #include "Crypto.h"
 #include "Cloud_Storage_Base_Class.h"
 

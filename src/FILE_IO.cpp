@@ -47,13 +47,12 @@ void combine_file(const char *path, FILE *fp,
 	std::vector<FILE*> files;
 	for(int i = 0; i < in_files.size() ; i++){
 		char fpath[256] = "";
-		char config[256] = "/home/dj0wns/.rlcs/config";
 		char temp[256];
 		sprintf(fpath, "%s/%s", path, in_files[i].c_str());
 		printf("%s\n",fpath);
 		strcpy(temp,in_files[i].c_str());
 		//download file
-		cloud_drives[i]->Download(config, path, temp);
+		cloud_drives[i]->Download(static_config_path, path, temp);
 		Decrypt(fpath, "Muffin");
 		files.emplace_back(fopen(fpath, "rb"));
 	}
@@ -86,11 +85,10 @@ void split_file(const char *path, const char *manifest, const char *name,
 	RAID0_split(fp, out_files);
 	for(int i = 0; i < out_files.size() ; i++){
 		char temp[256];
-		char config[256] = "/home/dj0wns/.rlcs/config";
 		fclose(out_files[i]);
 		Encrypt(out_paths[i], "Muffin");
 		strcpy(temp,out_paths[i].c_str());
-		cloud_drives[i]->Upload(config, temp);
+		cloud_drives[i]->Upload(static_config_path, temp);
 	}
 
 	sprintf(command1, "sed -i \"%s*/d\" %s", name,  manifest);

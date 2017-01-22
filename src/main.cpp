@@ -13,6 +13,7 @@
 #include "Crypto.h"
 #include "FILE_IO.h"
 #include "FUSE_Bindings.h"
+#include "Globals.h"
 
 //Cloud Services
 #include "Cloud_Storage_Base_Class.h"
@@ -22,11 +23,11 @@
 #include "OneDrive.h"
 
 
-
 #define USER_FOLDER "/.rlcs"
 #define CONFIG_FILE "/config"
 #define MANIFEST_FILE "/manifest"
 #define TEMP_DIR "/temp"
+
 
 struct fuse_operations fuse_oper;
 void check_user_dir(const char *user_folder_path, const char *config_file, 
@@ -58,6 +59,8 @@ int main(int argc, char ** argv){
 
 	strcat(temp_dir, user_folder_path);
 	strcat(temp_dir, TEMP_DIR);
+	
+	strcpy(static_config_path, config_file);
 
 	check_user_dir(user_folder_path, config_file, manifest_file, temp_dir);
 	
