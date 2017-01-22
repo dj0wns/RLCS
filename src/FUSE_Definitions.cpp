@@ -20,7 +20,7 @@ FUSE_Definitions::~FUSE_Definitions() {
 }
 
 void FUSE_Definitions::AbsPath(char dest[PATH_MAX], const char *path) {
-	strcpy(dest, _root);
+	strcpy(dest, temp_path);
 	strncat(dest, path, PATH_MAX);
 //	printf("translated path: %s to %s\n", path, dest);
 }
@@ -30,10 +30,10 @@ void FUSE_Definitions::setRootDir(const char *path) {
 	_root = path;
 }
 
-void FUSE_Definitions::setManifest(const char *path, const char *dir_path) {
+void FUSE_Definitions::setManifest(const char *path, const char *temp) {
 	printf("setting manifest path to: %s\n", path);
 	manifest = path;
-	dir = dir_path;
+	temp_path = temp;
 }
 
 int FUSE_Definitions::Getattr(const char *path, struct stat *statbuf) {
@@ -58,7 +58,8 @@ int FUSE_Definitions::Getattr(const char *path, struct stat *statbuf) {
 		fin >> temp;
 		while(fin.good()){
 			fin.ignore(256,'\n');
-			if(strcmp(path,temp.c_str())){
+			printf("%s : %s\n",path, temp.c_str());
+			if(strcmp(path,temp.c_str())==0){
 				statbuf->st_mode =  S_IFREG +6;
 				statbuf->st_ino = 666420;
 				statbuf->st_dev = 666420;
@@ -72,10 +73,11 @@ int FUSE_Definitions::Getattr(const char *path, struct stat *statbuf) {
 			}
 			fin >> temp;
 		} 
-		return 0;
 	}
+//	errno = ENOENT;
 	return -1;
 }
+
 
 int FUSE_Definitions::Readlink(const char *path, char *link, size_t size) {
 	printf("readlink(path=%s, link=%s, size=%d)\n", path, link, (int)size);
@@ -151,10 +153,10 @@ int FUSE_Definitions::Chown(const char *path, uid_t uid, gid_t gid) {
 
 int FUSE_Definitions::Truncate(const char *path, off_t newSize) {
 	printf("truncate(path=%s, newSize=%d\n", path, (int)newSize);
-	char full_path[256] = "/home/dj0wns/.rlcs/temp";
-	strcat(full_path, path);
+	char fullPath[PATH_MAX];
+	AbsPath(fullPath, path);
 
-	return RETURN_ERRNO(truncate(full_path, newSize));
+	return RETURN_ERRNO(truncate(fullPath, newSize));
 }
 
 int FUSE_Definitions::Utime(const char *path, struct utimbuf *ubuf) {
@@ -166,6 +168,22 @@ int FUSE_Definitions::Utime(const char *path, struct utimbuf *ubuf) {
 
 int FUSE_Definitions::Open(const char *path, struct fuse_file_info *fileInfo) {
 	printf("open(path=%s)\n", path);
+	bool found = false;
+	std::string temp;
+	std::ifstream fin (manifest, std::ifstream::in);
+	fin >> temp;
+	while(fin.good()){
+		fin.ignore(256,'\n');
+		if(strcmp(path,temp.c_str())==0){
+			found = true;
+		}
+		fin >> temp;
+	}
+	if(!found){
+		std::ofstream fout (manifest, std::ofstream::out);
+		fout << path << std::endl;
+		fout.close();
+	}
 	char fullPath[PATH_MAX];
 	AbsPath(fullPath, path);
 	fileInfo->fh = open(fullPath, fileInfo->flags);
@@ -179,8 +197,9 @@ int FUSE_Definitions::Read(const char *path, char *buf, size_t size, off_t offse
 
 int FUSE_Definitions::Write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fileInfo) {
 	printf("write(path=%s, size=%d, offset=%d)\n", path, (int)size, (int)offset);
-	char full_path[256] = "/home/dj0wns/.rlcs/temp";
 	int ret;
+	char full_path[256]= "";
+	strcat(full_path, temp_path);
 	strcat(full_path, path);
 
 	FILE *fs = fopen(full_path, "wb");
@@ -255,27 +274,29 @@ int FUSE_Definitions::Removexattr(const char *path, const char *name) {
 }
 
 int FUSE_Definitions::Opendir(const char *path, struct fuse_file_info *fileInfo) {
-	printf("opendir(path=%s)\n", path);
-	if(strcmp(path, "/") == 1){
+		char fullPath[PATH_MAX];
+		AbsPath(fullPath, path);
+	printf("opendir(path=%s)\n", fullPath);
+	if(strcmp(path, "/") == 0){
+		DIR *dir = opendir("/home/dj0wns/.rlcs/temp");
+		fileInfo->fh = (uint64_t)dir;
+		
 		return 0;
 	} else {
 		char fullPath[PATH_MAX];
 		AbsPath(fullPath, path);
 		DIR *dir = opendir(fullPath);
 		fileInfo->fh = (uint64_t)dir;
-		return NULL == dir ? -errno : 0;
+		return  0;
 	}
 }
 
 int FUSE_Definitions::Readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fileInfo) {
 	std::string temp;
 	if(strcmp(path, "/") == 0){
-		printf("%s\n",fileInfo->fh);
-		DIR *dir = (DIR*)fileInfo->fh;
-		struct dirent *de = readdir(dir);
-		if(NULL == de) {
-			return -errno;
-		} else {
+//		if(NULL == de) {
+//			return -errno;
+//		} else {
 			std::ifstream fin (manifest, std::ifstream::in);
 			fin >> temp;
 			while(fin.good()){
@@ -285,7 +306,7 @@ int FUSE_Definitions::Readdir(const char *path, void *buf, fuse_fill_dir_t fille
 				}
 				fin >> temp;
 			} 
-		}
+//		}
 		return 0;
 	} else {
 		printf("readdir(path=%s, offset=%d) THIS SHOULDNT HAPPEN!\n", path, (int)offset);
@@ -296,7 +317,7 @@ int FUSE_Definitions::Readdir(const char *path, void *buf, fuse_fill_dir_t fille
 
 int FUSE_Definitions::Releasedir(const char *path, struct fuse_file_info *fileInfo) {
 	printf("releasedir(path=%s)\n", path);
-	closedir((DIR*)fileInfo->fh);
+	//closedir((DIR*)fileInfo->fh);
 	return 0;
 }
 
@@ -311,7 +332,7 @@ void* FUSE_Definitions::Init(struct fuse_conn_info *conn) {
 int FUSE_Definitions::Truncate(const char *path, off_t offset, struct fuse_file_info *fileInfo) {
 	printf("truncate(path=%s, offset=%d)\n", path, (int)offset);
 	char fullPath[PATH_MAX];
-	AbsPath(fullPath, path);
+	AbsPath(fullPath, temp_path);
 	return RETURN_ERRNO(ftruncate(fileInfo->fh, offset));
 }
 
