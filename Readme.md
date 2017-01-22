@@ -31,8 +31,6 @@ Getting a seemlessly integrated FUSE filesystem.
 
 Successful integration of Python scripts into C++.
 
-## What we learned
-
 ## What's next for RLCS
 Adding _**functionality**_ including: remove files, retrieving amount of free/used space.
 
