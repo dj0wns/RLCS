@@ -42,7 +42,9 @@ int main(int argc, char ** argv){
 	char dir_file[256] = "";
 	std::vector<Cloud_Storage_Base_Class*> cloud_drives;
 	cloud_drives.push_back(new Dropbox());
-	//cloud_drives.push_back(GDrive());
+	cloud_drives.push_back(new GDrive());
+	cloud_drives.push_back(new Mega());
+	cloud_drives.push_back(new OneDrive());
 
 	strcat(user_folder_path, homedir);
 	strcat(user_folder_path, USER_FOLDER);
@@ -59,7 +61,6 @@ int main(int argc, char ** argv){
 	check_user_dir(user_folder_path, config_file, manifest_file, dir_file);
 
 	config(config_file, cloud_drives);
-//	system ("python py/Dropbox.py");	
 //	launch_fs(argc, argv, manifest_file, dir_file);
 	return 0;
 }
@@ -93,11 +94,22 @@ void check_user_dir(const char *user_folder_path, const char *config_file,
 	}
 }
 
-void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_drives)
-{
-	for(auto cloud_drive : cloud_drives)
-	{
-		// TODO
+void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_drives){
+	for(auto cloud_drive : cloud_drives){
+		if(strcmp(cloud_drive->Service_Name.c_str(), "Dropbox") == 0){
+			char buffer[256];
+			sprintf(buffer, "python py/DropboxConfig.py %s", config_file);
+			system(buffer);
+		}
+		else if(strcmp(cloud_drive->Service_Name.c_str(), "GDrive") == 0){
+			// system("python py/GDriveConfig.py");
+		}
+		else if(strcmp(cloud_drive->Service_Name.c_str(), "Mega") == 0){
+			// TODO: config script for Mega
+		}
+		else if(strcmp(cloud_drive->Service_Name.c_str(), "OneDrive") == 0){
+			// TODO: config script for OneDrive
+		}
 	}
 }
 
