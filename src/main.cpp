@@ -61,7 +61,7 @@ int main(int argc, char ** argv){
 	check_user_dir(user_folder_path, config_file, manifest_file, temp_dir);
 
 	config(config_file, cloud_drives);
-	launch_fs(argc, argv, manifest_file, temp_dir);
+//	launch_fs(argc, argv, manifest_file, temp_dir);
 	return 0;
 }
 
@@ -88,11 +88,11 @@ void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_dri
 	for(auto cloud_drive : cloud_drives){
 		if(strcmp(cloud_drive->Service_Name.c_str(), "Dropbox") == 0){
 			char buffer[256];
-			sprintf(buffer, "python py/DropboxConfig.py %s", config_file);
+			sprintf(buffer, "python2 py/DropboxConfig.py %s", config_file);
 			system(buffer);
 		}
 		else if(strcmp(cloud_drive->Service_Name.c_str(), "GDrive") == 0){
-			// system("python py/GDriveConfig.py");
+			// system("python2 py/GDriveConfig.py");
 		}
 		else if(strcmp(cloud_drive->Service_Name.c_str(), "Mega") == 0){
 			// TODO: config script for Mega
