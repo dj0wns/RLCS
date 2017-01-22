@@ -5,8 +5,8 @@ void set_rootdir(const char *path) {
 	FUSE_Definitions::Instance()->setRootDir(path);
 }
 
-void set_manifest(const char *path) {
-	FUSE_Definitions::Instance()->setManifest(path);
+void set_manifest(const char *path, const char *temp) {
+	FUSE_Definitions::Instance()->setManifest(path, temp);
 }
 
 int FUSE_Bindings_getattr(const char *path, struct stat *statbuf) {
