@@ -54,6 +54,7 @@ void combine_file(const char *path, FILE *fp,
 		strcpy(temp,in_files[i].c_str());
 		//download file
 		cloud_drives[i]->Download(config, path, temp);
+		Decrypt(fpath, "Muffin");
 		files.emplace_back(fopen(fpath, "rb"));
 	}
 
@@ -87,6 +88,7 @@ void split_file(const char *path, const char *manifest, const char *name,
 		char temp[256];
 		char config[256] = "/home/dj0wns/.rlcs/config";
 		fclose(out_files[i]);
+		Encrypt(out_paths[i], "Muffin");
 		strcpy(temp,out_paths[i].c_str());
 		cloud_drives[i]->Upload(config, temp);
 	}

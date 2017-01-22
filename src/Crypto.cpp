@@ -8,13 +8,13 @@ void GenerateKey(char key[KEY_SIZE]){
     }          
 }
 
-void Encrypt (std::string &path, char key[KEY_SIZE]){
+void Encrypt (std::string path, char key[KEY_SIZE]){
 	char command[256];
 	sprintf(command, "ccrypt -e %s -K %s -S \"\"", path.c_str(), key);
 	system (command);
 }
 
-void Decrypt (std::string &path, char key[KEY_SIZE]){
+void Decrypt (std::string path, char key[KEY_SIZE]){
 	char command[256];
 	sprintf(command, "ccrypt -d %s -K %s -S \"\"", path.c_str(), key);
 	system (command);

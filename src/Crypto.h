@@ -11,8 +11,8 @@
 
 void GenerateKey(char key[KEY_SIZE]);
 
-void Encrypt(std::string &infile, char key[KEY_SIZE]);
+void Encrypt(std::string infile, char key[KEY_SIZE]);
 
-void Decrypt(std::string &infile, char key[KEY_SIZE]);
+void Decrypt(std::string infile, char key[KEY_SIZE]);
 
 #endif
