@@ -7,8 +7,10 @@ Dropbox::Dropbox(){
 	Dropbox::Service_Name = "Dropbox";
 }
 
-int Dropbox::Config(){
-	return 0;
+int Dropbox::Config(char* path){
+	char buffer[256];
+	sprintf(buffer, "python2 py/DropboxConfig.py %s", path);
+	return system(buffer);
 }
 
 int Dropbox::Download(FILE &out_file){

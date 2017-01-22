@@ -1,6 +1,6 @@
 #include "Cloud_Storage_Base_Class.h"
 
-int Cloud_Storage_Base_Class::Config(){
+int Cloud_Storage_Base_Class::Config(char* path){
 	return 0;
 }
 

@@ -8,7 +8,7 @@ class Mega : public Cloud_Storage_Base_Class{
 public:
 	Mega();
 
-	int Config();
+	int Config(char* path = NULL);
 	
 	int Download(FILE &out_file);
 	int Upload(FILE &in_file);

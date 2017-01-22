@@ -86,20 +86,7 @@ void check_user_dir(const char *user_folder_path, const char *config_file,
 
 void config(char* config_file, std::vector<Cloud_Storage_Base_Class*> &cloud_drives){
 	for(auto cloud_drive : cloud_drives){
-		if(strcmp(cloud_drive->Service_Name.c_str(), "Dropbox") == 0){
-			char buffer[256];
-			sprintf(buffer, "python2 py/DropboxConfig.py %s", config_file);
-			system(buffer);
-		}
-		else if(strcmp(cloud_drive->Service_Name.c_str(), "GDrive") == 0){
-			// system("python2 py/GDriveConfig.py");
-		}
-		else if(strcmp(cloud_drive->Service_Name.c_str(), "Mega") == 0){
-			// TODO: config script for Mega
-		}
-		else if(strcmp(cloud_drive->Service_Name.c_str(), "OneDrive") == 0){
-			// TODO: config script for OneDrive
-		}
+		cloud_drive->Config(config_file);
 	}
 }
 

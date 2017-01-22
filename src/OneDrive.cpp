@@ -7,7 +7,7 @@ OneDrive::OneDrive(){
 	OneDrive::Service_Name = "OneDrive";
 }
 
-int OneDrive::Config(){
+int OneDrive::Config(char* path){
 	return 0;
 }
 

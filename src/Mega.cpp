@@ -7,7 +7,7 @@ Mega::Mega(){
 	Mega::Service_Name = "Mega";
 }
 
-int Mega::Config(){
+int Mega::Config(char* path){
 	return 0;
 }
 
